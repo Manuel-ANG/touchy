@@ -1,15 +1,13 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    namespace 'fun.observe.touchy.app'
+    compileSdkVersion 34
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 25
+        targetSdkVersion 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -17,80 +15,26 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    ndkVersion '21.0.6113669'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-}
-
-task sourcesJar(type: Jar) {
-    archiveClassifier.set("sources")
-    from android.sourceSets.main.java.srcDirs
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-
-                groupId = 'fun.observe'
-                artifactId = 'touchy'
-                version = '1.0.0'
-
-                from components.release
-                artifact sourcesJar
-
-                pom {
-
-                    name = 'Touchy'
-                    description = 'Global Touch Listener for Android'
-                    url = 'https://github.com/fatih-iver/touchy'
-
-                    licenses {
-                        license {
-                            name = 'GPL-3.0 License'
-                            url = 'http://www.gnu.org/licenses/gpl-3.0.tr.html'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = 'fatih-iver'
-                            name = 'Fatih'
-                            email = 'fatih.iver@gmail.com'
-                        }
-                    }
-
-                    scm {
-                        url = 'https://github.com/fatih-iver/touchy'
-                    }
-                }
-
-            }
-        }
-
-        repositories {
-            maven {
-
-                url = "https://api.bintray.com/maven/fiver6/maven-repository/touchy"
-
-                credentials {
-                    username = 'fiver6'
-                    password = '${BINTRAY_API_KEY}'
-                }
-
-            }
-        }
-
-    }
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
